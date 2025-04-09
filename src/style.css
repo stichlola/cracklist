@@ -1,0 +1,279 @@
+
+:root {
+  /* ! Main theme colors */
+  --background: #262626;
+  --button: #cd30c0;
+  --text: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Roboto, sans-serif;
+  color: var(--text);
+  text-align: center;
+  transition: background-color 0.5s;
+  background: var(--background);
+
+}
+
+#home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background: var(--background);
+  color: var(--text);
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.app-title {
+  font-size: 32px;
+  font-weight: 600;
+  text-transform: none;
+  text-align: center;
+  letter-spacing: 0px;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+#categories {
+  margin: 20px 0;
+  display: flex;
+  gap: 17px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#categories label {
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+  text-align: center;
+}
+
+#categories input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"].active {
+  border: 2px solid #3498db; /* Colore del bordo blu quando selezionato */
+  background-color: #3498db; /* Colore di sfondo blu */
+  color: white; /* Colore del testo (se applicabile) */
+}
+
+input[type="radio"].active + span {
+  font-weight: bold;
+  color: #3498db;
+}
+
+#categories label:hover {
+  transform: scale(1.1);
+}
+
+#categories input[type="radio"]:checked + label {
+  transform: scale(1.1);
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 87, 51, 0.7);
+}
+
+#start-button {
+  padding: 9px 45px;
+  font-size: 13px;
+  line-height: 1.4;
+  background-color: var(--button);
+  color: var(--text);
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, .25);
+}
+
+#start-button:hover {
+  background-color: #45a049;
+  transform: scale(1.1);
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+#text {
+  font-size: 32px;
+  margin: 0;
+  user-select: none;
+  text-transform: uppercase;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.home-button {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  color: var(--text);
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  background-color: var(--button);
+  padding: 12px 25px;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, .25);
+}
+
+.home-button:hover {
+  background-color: var(--button);
+  transform: scale(1.1);
+}
+
+#cracklist-words {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.word {
+  font-size: 24px;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  user-select: none;
+  text-align: center;
+  flex: 1;
+}
+
+
+.word.active {
+  background-color: rgb(200, 190, 53);
+}
+
+.shuffle-button {
+  margin-top: 10px;
+  padding: 8px 16px; /* Reso più piccolo */
+  font-size: 14px;
+  background-color: #3498db; /* Nuovo colore di sfondo */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Rende il pulsante arrotondato */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Ombra più leggera */
+  font-weight: 600;
+}
+
+.shuffle-button:hover {
+  background-color: #3498db; /* Colore di hover più scuro */
+  transform: scale(1.1); /* Effetto di ingrandimento */
+}
+
+.shuffle-button:active {
+  background-color: #3498db; /* Colore quando viene cliccato */
+  transform: scale(0.9); /* Effetto di riduzione quando cliccato */
+} 
+.cracklist-card {
+  background-color: #ef2121; /* Colore rosso di sfondo */
+  color: white; /* Testo bianco per contrastare con il rosso */
+  padding: 20px;
+  border-radius: 12px; /* Angoli arrotondati per sembrare una carta */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra per dare profondità */
+  width: 300px; /* Larghezza fissa per la carta */
+  height: auto; /* Altezza automatica per adattarsi al contenuto */
+  text-align: center; /* Testo centrato */
+  margin: 20px; /* Distanza tra le carte */
+  transition: transform 0.3s, box-shadow 0.3s; /* Effetto di transizione */
+  transform-style: preserve-3d; /* Abilita la prospettiva per la rotazione 3D */
+}
+
+.cracklist-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Ombra più intensa al passaggio del mouse */
+}
+
+/* Animazione di rotazione per lo shuffle */
+@keyframes shuffle-rotation {
+  0% {
+    transform: rotateY(0deg); /* Partenza con la carta nella posizione normale */
+  }
+  50% {
+    transform: rotateY(180deg); /* La carta si gira di 180 gradi */
+  }
+  100% {
+    transform: rotateY(360deg); /* La carta torna nella posizione normale */
+  }
+}
+
+.cracklist-card.shuffle {
+  animation: shuffle-rotation 0.6s ease-in-out; /* Durata e tipo di animazione */
+}
+
+.cracklist-card .word {
+  font-size: 20px; /* Dimensione del testo */
+  margin: 10px 0;
+  font-weight: bold; /* Rende il testo più evidente */
+}
+
+
+.phrase-item {
+  font-size: 24px; /* Dimensione del testo */
+  margin: 10px 0; /* Spazio tra le frasi */
+  padding: 8px 12px; /* Padding interno */
+  border-radius: 8px; /* Bordo arrotondato */
+  background-color: rgba(255, 255, 255, 0.2); /* Sfondo semi-trasparente */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombra leggera */
+  text-align: center; /* Allineamento centrale */
+  word-break: break-word; /* A capo automatico per frasi lunghe */
+}
+
+/* Opzionale: Animazione di apparizione */
+.phrase-item {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 480px) {
+}
