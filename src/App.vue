@@ -2,19 +2,20 @@
   <div>
     <!-- Home Screen -->
     <div v-if="!isGameStarted" id="home">
-      <h1 class="app-title">A cosa giochiamo?</h1>
-      <div id="categories">
+     <h1 class="app-title">Pronto a giocare?</h1>
+     <!--  <div id="categories">
         <label v-for="(category, index) in categories" :key="index">
-          <input 
-            type="radio" 
-            name="category" 
-            :value="category" 
-            v-model="selectedCategory" 
-            :class="{ active: selectedCategory === category }" 
+          <input
+            type="radio"
+            name="category"
+            :value="category"
+            v-model="selectedCategory"
+            :class="{ active: selectedCategory === category }"
           />
           <span>{{ categoryLabels[category] }}</span>
         </label>
       </div>
+       -->
       <button @click="startGame" id="start-button">Iniziamo</button>
       <a href="#" class="home-button" @click.prevent="settings">Settings</a>
 
@@ -24,13 +25,13 @@
     <div v-else id="content">
       <h1 v-if="currentPhrase" id="text">{{ currentPhrase }}</h1>
 
-      <button 
-          class="countdown-button" 
-          @click="startCountdown" 
+      <button
+          class="countdown-button"
+          @click="startCountdown"
         >
           {{ countdownActive ? countdown  : 'Start Timer' }}
         </button>
-        
+
 
       <div
         v-if="selectedCategory === 'cracklist'"
@@ -40,8 +41,8 @@
         <div class="card-inner">
           <!-- Fronte -->
           <div class="card-front">
-            <div 
-              v-for="(word, index) in randomWords" 
+            <div
+              v-for="(word, index) in randomWords"
               :key="index"
               class="word"
               :class="{ active: activeWordIndex === index }"
@@ -57,7 +58,7 @@
           </div>
         </div>
 
-      
+
         <button @click="loadRandomPhrase" class="shuffle-button">Shuffle</button>
       </div>
 
@@ -99,7 +100,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 
-const categories = ['cracklist', 'verita_pegno', 'picolo', 'non_ho_mai', 'chi_e_piu_propenso_a', 'gioco_della_bottiglia', 'fai'];
+// const categories = ['cracklist', 'verita_pegno', 'picolo', 'non_ho_mai', 'chi_e_piu_propenso_a', 'gioco_della_bottiglia', 'fai'];
+ const categories = ['cracklist'];
 const categoryLabels = {
   cracklist: 'Cracklist',
   verita_pegno: 'Verità o pegno',
@@ -122,7 +124,7 @@ const categoriesData = reactive({
 });
 
 // Stato per la selezione della categoria e del gioco
-const selectedCategory = ref(null);
+const selectedCategory = ref("cracklist");
 const isGameStarted = ref(false);
 const currentPhrase = ref('Placeholder');
 const randomWords = ref([]);
@@ -236,7 +238,7 @@ function loadRandomPhrase(flip=true) {
       isShuffling.value = false;
     }, 600); // Durata dell'animazione 3D
     }
- 
+
   } else {
     currentPhrase.value = getRandomPhrases(categoriesData[selectedCategory.value], 1)[0];
   }
@@ -251,7 +253,7 @@ function getRandomPhrases(phrases, count) {
 // Funzione per tornare alla home
 function goHome() {
   isGameStarted.value = false;
-  selectedCategory.value = null;
+  // selectedCategory.value = null;
   currentPhrase.value = 'Placeholder';
   randomWords.value = [];
 }
@@ -305,5 +307,5 @@ function saveSettings() {
 </script>
 
 <style scoped>
-  
+
 </style>
