@@ -9,6 +9,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['images/back.png'], 
       manifest: {
         name: 'Crack List',
         short_name: 'CrackList',

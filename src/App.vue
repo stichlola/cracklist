@@ -2,6 +2,7 @@
   <div>
     <!-- Home Screen -->
     <div v-if="!isGameStarted" id="home">
+      <img src="/images/front.png" alt="Immagine retro" draggable="false" />
      <h1 class="app-title">Pronto a giocare?</h1>
      <!--  <div id="categories">
         <label v-for="(category, index) in categories" :key="index">
@@ -17,7 +18,7 @@
       </div>
        -->
       <button @click="startGame" id="start-button">Iniziamo</button>
-      <a href="#" class="home-button" @click.prevent="settings">Settings</a>
+      <a href="#" class="home-button" @click.prevent="settings">Impostazioni</a>
 
     </div>
 
@@ -29,7 +30,8 @@
           class="countdown-button"
           @click="startCountdown"
         >
-          {{ countdownActive ? countdown  : 'Start Timer' }}
+        <font-awesome-icon v-if="!countdownActive" icon="stopwatch" />
+          {{ countdownActive ? countdown : ''}}
         </button>
 
 
@@ -54,7 +56,7 @@
 
           <!-- Retro -->
           <div class="card-back">
-            <img src="/back.png" alt="Immagine retro" />
+            <img src="/images/back.png" alt="Immagine retro" draggable="false" />
           </div>
         </div>
 
@@ -88,8 +90,9 @@
     <textarea v-model="newPhrasesText" placeholder="Inserisci frasi, una per riga"></textarea>
 
     <div class="settings-actions">
-      <button @click="saveSettings">Salva</button>
       <button @click="closeSettings">Chiudi</button>
+      <button @click="saveSettings">Salva</button>
+
     </div>
   </div>
 </div>
@@ -100,8 +103,9 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 
+
 // const categories = ['cracklist', 'verita_pegno', 'picolo', 'non_ho_mai', 'chi_e_piu_propenso_a', 'gioco_della_bottiglia', 'fai'];
- const categories = ['cracklist'];
+const categories = ['cracklist'];
 const categoryLabels = {
   cracklist: 'Cracklist',
   verita_pegno: 'Verità o pegno',
@@ -212,6 +216,11 @@ function loadRandomPhrase(flip=true) {
   activeWordIndex.value = null;
 
   if (selectedCategory.value === 'cracklist') {
+    if (countdownActive.value) {
+      clearInterval(countdownInterval)
+      countdownActive.value = false
+    }
+  
     currentPhrase.value = null;
 
     if(flip){
@@ -252,6 +261,11 @@ function getRandomPhrases(phrases, count) {
 
 // Funzione per tornare alla home
 function goHome() {
+  if (countdownActive.value) {
+    clearInterval(countdownInterval)
+    countdownActive.value = false
+  }
+
   isGameStarted.value = false;
   // selectedCategory.value = null;
   currentPhrase.value = 'Placeholder';
