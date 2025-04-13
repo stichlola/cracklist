@@ -172,6 +172,7 @@ input[type="radio"].active + span {
   user-select: none;
   text-align: center;
   flex: 1;
+  
 }
 
 
@@ -180,8 +181,10 @@ input[type="radio"].active + span {
 }
 
 .shuffle-button {
+  margin: auto;
+  width: 100px;
   margin-top: 10px;
-  padding: 8px 16px; /* Reso più piccolo */
+  padding: 20px 16px; /* Reso più piccolo */
   font-size: 14px;
   background-color: #3498db; /* Nuovo colore di sfondo */
   color: white;
@@ -203,44 +206,74 @@ input[type="radio"].active + span {
   transform: scale(0.9); /* Effetto di riduzione quando cliccato */
 } 
 .cracklist-card {
-  background-color: #ef2121; /* Colore rosso di sfondo */
-  color: white; /* Testo bianco per contrastare con il rosso */
-  padding: 20px;
-  border-radius: 12px; /* Angoli arrotondati per sembrare una carta */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra per dare profondità */
-  width: 300px; /* Larghezza fissa per la carta */
-  height: auto; /* Altezza automatica per adattarsi al contenuto */
-  text-align: center; /* Testo centrato */
-  margin: 20px; /* Distanza tra le carte */
-  transition: transform 0.3s, box-shadow 0.3s; /* Effetto di transizione */
-  transform-style: preserve-3d; /* Abilita la prospettiva per la rotazione 3D */
+  perspective: 1000px;
+  width: 300px;
+  height: 450px;
+  margin: 20px auto;
+  position: relative;
 }
 
-.cracklist-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Ombra più intensa al passaggio del mouse */
+/* Contenitore interno che ruota */
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+  position: relative;
 }
 
-/* Animazione di rotazione per lo shuffle */
-@keyframes shuffle-rotation {
-  0% {
-    transform: rotateY(0deg); /* Partenza con la carta nella posizione normale */
-  }
-  50% {
-    transform: rotateY(180deg); /* La carta si gira di 180 gradi */
-  }
-  100% {
-    transform: rotateY(360deg); /* La carta torna nella posizione normale */
-  }
+/* Quando lo stato è flip, ruota di 180 gradi */
+.cracklist-card.flip .card-inner {
+  transform: rotateY(180deg);
 }
 
-.cracklist-card.shuffle {
-  animation: shuffle-rotation 0.6s ease-in-out; /* Durata e tipo di animazione */
+/* Fronte e retro della carta */
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 8px #44444454;
+  display: flex;
+  align-items: center;  
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Stile fronte (come ora) */
+.card-front {
+  background-color: #ef2121;
+  color: white;
+  z-index: 2;
+}
+
+/* Stile retro */
+.card-back {
+  background-color: #00538b;
+  transform: rotateY(180deg);
+  overflow: hidden;
+}
+
+.card-back img {
+  width: 70%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 .cracklist-card .word {
   font-size: 20px; /* Dimensione del testo */
-  margin: 10px 0;
+  margin: 20px 0;
   font-weight: bold; /* Rende il testo più evidente */
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+
 }
 
 
@@ -277,3 +310,121 @@ input[type="radio"].active + span {
 
 @media (max-width: 480px) {
 }
+
+.countdown-button {
+  margin-bottom: 15px;
+  padding: 10px 30px;
+  font-size: 16px;
+  background-color: #ffc800;
+  color: black;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.countdown-button:hover:enabled {
+  background-color: #ffdf4d;
+  transform: scale(1.05);
+}
+
+.countdown-button:disabled {
+  background-color: #bfa100;
+  cursor: not-allowed;
+  color: #fff;
+}
+
+.settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.settings-content {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settings-content h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.settings-content textarea {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  font-size: 16px;
+  resize: none;
+  border-radius: 10px;
+  border: none;
+  background-color: #333;
+  color: white;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.settings-actions button {
+  flex: 1;
+  padding: 10px;
+  font-weight: bold;
+  background-color: var(--button);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.settings-actions button:hover {
+  transform: scale(1.05);
+}
+
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.settings-tabs button {
+  padding: 6px 12px;
+  border: none;
+  background-color: #333;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.settings-tabs button.active {
+  background-color: var(--button);
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+

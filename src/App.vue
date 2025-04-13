@@ -16,31 +16,83 @@
         </label>
       </div>
       <button @click="startGame" id="start-button">Iniziamo</button>
+      <a href="#" class="home-button" @click.prevent="settings">Settings</a>
+
     </div>
 
     <!-- Game Screen -->
     <div v-else id="content">
       <h1 v-if="currentPhrase" id="text">{{ currentPhrase }}</h1>
 
-      <!-- Aggiungiamo una carta con un bordo per la sezione cracklist -->
-      <div v-if="selectedCategory === 'cracklist'" id="cracklist-words"    :class="['cracklist-card', { shuffle: isShuffling }]">
-        <div 
-  v-for="(word, index) in randomWords" 
-  :key="index"
->
-  <div 
-    class="word" 
-    :class="{ active: activeWordIndex === index }"
-    @click="activeWordIndex = index"
-  >
-    {{ word }}
-  </div>
-</div>
-        <button @click="loadRandomPhrase"  class="shuffle-button">Shuffle</button> <!-- Button per triggerare lo shuffle -->
+      <button 
+          class="countdown-button" 
+          @click="startCountdown" 
+        >
+          {{ countdownActive ? countdown  : 'Start Timer' }}
+        </button>
+        
+
+      <div
+        v-if="selectedCategory === 'cracklist'"
+        id="cracklist-words"
+        :class="['cracklist-card', { flip: flipped, shuffle: isShuffling }]"
+      >
+        <div class="card-inner">
+          <!-- Fronte -->
+          <div class="card-front">
+            <div 
+              v-for="(word, index) in randomWords" 
+              :key="index"
+              class="word"
+              :class="{ active: activeWordIndex === index }"
+              @click="activeWordIndex = index"
+            >
+              {{ word }}
+            </div>
+          </div>
+
+          <!-- Retro -->
+          <div class="card-back">
+            <img src="/back.png" alt="Immagine retro" />
+          </div>
+        </div>
+
+      
+        <button @click="loadRandomPhrase" class="shuffle-button">Shuffle</button>
       </div>
+
 
       <a href="#" class="home-button" @click.prevent="goHome">Home</a>
     </div>
+
+
+<!-- SETTINGS MODAL -->
+<div v-if="showSettings" class="settings-modal">
+  <div class="settings-content">
+    <h2>Modifica Frasi</h2>
+
+    <!-- Tabs -->
+    <div class="settings-tabs">
+      <button
+        v-for="cat in categories"
+        :key="cat"
+        @click="selectCategory(cat)"
+        :class="{ active: selectedTab === cat }"
+      >
+        {{ cat.replace(/_/g, ' ') }}
+      </button>
+    </div>
+
+    <!-- Textarea per la categoria attiva -->
+    <textarea v-model="newPhrasesText" placeholder="Inserisci frasi, una per riga"></textarea>
+
+    <div class="settings-actions">
+      <button @click="saveSettings">Salva</button>
+      <button @click="closeSettings">Chiudi</button>
+    </div>
+  </div>
+</div>
+
   </div>
 </template>
 
@@ -76,8 +128,37 @@ const currentPhrase = ref('Placeholder');
 const randomWords = ref([]);
 const isShuffling = ref(false);
 const activeWordIndex = ref(null);
+const flipped = ref(false);
+const countdown = ref(20)
+const countdownActive = ref(false)
+const showSettings = ref(false)
+const newPhrasesText = ref('')
+const selectedTab = ref('cracklist')
+
+let countdownInterval = null
 
 
+function startCountdown() {
+  // Se il timer è già attivo, resetta tutto
+  if (countdownActive.value) {
+    clearInterval(countdownInterval)
+    countdownActive.value = false
+    return
+  }
+
+  // Avvia il countdown
+  countdown.value = 20
+  countdownActive.value = true
+
+  countdownInterval = setInterval(() => {
+    countdown.value--
+    if (countdown.value === 0) {
+      clearInterval(countdownInterval)
+      countdownActive.value = false
+      alert("Tempo scaduto!")
+    }
+  }, 1000)
+}
 
 // Funzione per caricare le frasi
 async function loadPhrases(filePath) {
@@ -110,7 +191,6 @@ async function initializeCategories() {
 }
 
 onMounted(() => {
-  console.log("pippo")
   initializeCategories();
 });
 
@@ -118,7 +198,7 @@ onMounted(() => {
 function startGame() {
   if (selectedCategory.value) {
     isGameStarted.value = true;
-    loadRandomPhrase();
+    loadRandomPhrase(false);
   } else {
     alert('Seleziona una categoria per continuare!');
   }
@@ -126,24 +206,38 @@ function startGame() {
 
 // Funzione per caricare una frase casuale o parole
 // Funzione per caricare una frase casuale o parole
-function loadRandomPhrase() {
-  activeWordIndex.value = null
-  if (selectedCategory.value === 'cracklist') {
-    // Prima settiamo il valore su null per nascondere la frase
-    currentPhrase.value = null;
-    
-    // Attiviamo l'animazione shuffle
-    isShuffling.value = true;
-    
-    // Selezioniamo le 3 parole casuali
-    randomWords.value = getRandomPhrases(categoriesData[selectedCategory.value], 3);
+function loadRandomPhrase(flip=true) {
+  activeWordIndex.value = null;
 
-    // Disattiviamo l'animazione dopo il tempo dell'animazione (600ms)
+  if (selectedCategory.value === 'cracklist') {
+    currentPhrase.value = null;
+
+    if(flip){
+    // Attiviamo l'animazione flip
+    flipped.value = true; // <-- questa è la nuova parte
+
+    isShuffling.value = true;
+
+    }
+
+    if(flip){
+    // Cambiamo le parole dopo mezzo secondo
     setTimeout(() => {
+      randomWords.value = getRandomPhrases(categoriesData[selectedCategory.value], 3);
+    }, 300);
+  }else{
+    randomWords.value = getRandomPhrases(categoriesData[selectedCategory.value], 3);
+  }
+
+    // Disattiviamo l'animazione flip + shuffle
+    if(flip){
+         setTimeout(() => {
+      flipped.value = false;
       isShuffling.value = false;
-    }, 600);
+    }, 600); // Durata dell'animazione 3D
+    }
+ 
   } else {
-    // Per altre categorie, carichiamo una sola frase casuale
     currentPhrase.value = getRandomPhrases(categoriesData[selectedCategory.value], 1)[0];
   }
 }
@@ -170,6 +264,41 @@ function loadFromLocalStorage(key) {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : null;
 }
+
+
+
+function settings() {
+  showSettings.value = true
+  loadCategoryPhrases(selectedTab.value)
+}
+
+function closeSettings() {
+  showSettings.value = false
+}
+
+function selectCategory(cat) {
+  selectedTab.value = cat
+  loadCategoryPhrases(cat)
+}
+
+function loadCategoryPhrases(cat) {
+  const phrases = categoriesData[cat] || []
+  newPhrasesText.value = phrases.join('\n')
+}
+
+function saveSettings() {
+  const phrases = newPhrasesText.value
+    .split('\n')
+    .map(p => p.trim())
+    .filter(p => p.length > 0)
+
+  categoriesData[selectedTab.value] = phrases
+  saveToLocalStorage(selectedTab.value, phrases)
+  closeSettings()
+}
+
+
+
 
 
 
